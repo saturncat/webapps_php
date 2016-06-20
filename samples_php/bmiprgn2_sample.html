@@ -1,0 +1,144 @@
+<?php
+/*
+This is the results page from the pregnancy weight gain calculator, it's taking some inputs from the form on page 1 and calculating their BMI, and then presenting some result text.
+*/
+
+/*** Initial stuff ************************************/
+
+require_once("../com/template_level.php");
+do_header("Pregnancy Weight Gain");
+
+/*** Calculate BMI ************************************/
+
+function calcBMI($calcHeight,$calcWeight) {
+	$bmi = ($calcWeight/pow($calcHeight,2));
+	$bmi = round($bmi,1);
+	return $bmi;
+}
+
+/*** Input validation ************************************/
+
+function checkError() {
+	require_once("common/output_std_eguide.php");
+	do_header_std("Error");
+?>
+<!-- inserting error text here -->
+
+<?php
+
+}
+ 
+/*** Process input ************************************/
+ 
+if (($_POST['weight1'] == "") or ($_POST['height1'] == "")) {
+	checkError();
+} else {
+	$weight = intval($_POST['weight1']) + doubleval($_POST['weight2']);
+	$height = intval($_POST['height1']) + doubleval($_POST['height2']) + doubleval($_POST['height3']);
+	$calcWeight = $weight *.45359237;
+	$calcHeight = $height *.0254;
+	$bmi = calcBMI($calcHeight,$calcWeight);
+}
+
+
+
+
+?>
+
+
+<!-- begin page content -->
+<div id="content">
+<h1 class="heading">Pregnancy Weight Gain</h1>
+<br />
+
+<p>Your BMI is <span class="alert_blue"><?php echo $bmi;?></span></p>
+
+
+<?php 
+
+if ($bmi < 18.5) {
+
+	echo "<h2 class='subheading'>Recommended Weight Gain</h2><p>Ideally, your total weight gain during pregnancy should 
+	be anywhere from 28 &ndash; 40 pounds (metric: 12.5 &ndash; 18 kg). Please see a health care professional as soon 
+	as you learn you are pregnant and throughout your pregnancy. Regular monitoring of your baby’s growth and development
+	throughout pregnancy is very important.</p>
+	<h2 class='subheading'>Recommended Pattern of Weight Gain</h2><p>Weight gain during the first trimester is usually negligible
+	 &mdash; not more than 4 pounds. After that, weight gain should be approximately 1 pound (1.0 &ndash; 1.3 pounds) per week during the 2nd and 3rd [metric: 0.51 kg/week 
+	(0.44 &ndash; 0.58 kg).</p>
+	<h2 class='subheading'>Challenges to Consider</h2><p>Your challenge is to eat a healthy diet and gain enough weight. For many women who don't weigh enough, this happens easily, but other women have to work at eating enough healthy food. Avoid alcohol, drugs and tobacco smoke (including second hand smoke), all of which can harm your baby.  Although you may want to rest a bit more than usual as you get closer to delivering your baby, staying active and fit throughout your pregnancy will help you be more comfortable. It will also help your delivery go more smoothly. Don't forget to take your prenatal vitamins.</p>";
+
+}
+
+if (($bmi >= 18.5) && ($bmi <= 24.9)) {
+
+	echo "<h2 class='subheading'>Recommended Weight Gain</h2><p>Ideally, your total weight gain during pregnancy should be 
+	anywhere from 25 &ndash; 35 pounds (metric: 11.5 &ndash; 16.0 kg). Please see a health care professional as soon 
+	as you learn you are pregnant and throughout your pregnancy. Regular monitoring of your baby’s growth and development 
+	throughout pregnancy is very important.</p>
+	<h2 class='subheading'>Recommended Pattern of Weight Gain</h2><p>Weight gain during the first trimester is usually negligible 
+	&mdash; not more than 4 pounds. After that, weight gain should be approximately 1 pound (0.8 &ndash; 1.0 pounds) per week during the 2nd and 3rd trimesters [metric: 0.42 kg/week 
+	(0.35 &ndash; 0.50 kg/wk).</p>
+		<h2 class='subheading'>Challenges to Consider</h2><p>Your challenge is to eat a healthy diet throughout your pregnancy and avoid gaining too much weight. Avoid alcohol, drugs and tobacco smoke (including second hand smoke), all of which can harm your baby.  Although you may want to rest a bit more than usual as you get closer to delivering your baby, staying active and fit throughout your pregnancy will help you be more comfortable. It will also help your delivery go more smoothly. Don't forget to take your prenatal vitamins.</p>";
+
+}
+
+if (($bmi >= 25.0)  && ($bmi <= 29.9)) {
+
+	echo "<h2 class='subheading'>Recommended Weight Gain</h2><p>Ideally, your total weight gain during pregnancy should 
+	be anywhere from 15 &ndash; 25 pounds (metric: 7.0 &ndash; 11.5 kg). Please see a health care professional as soon as you learn you 
+	are pregnant and throughout your pregnancy. Regular monitoring of your baby’s growth and development throughout 
+	pregnancy is very important.</p>
+		<h2 class='subheading'>Recommended Pattern of Weight Gain</h2><p>Weight gain during the first trimester is usually negligible
+	&mdash; not more than 4 pounds. After that, weight gain should be approximately 0.6 pounds (0.5 &ndash; 0.7 pounds) per week during the 2nd and 3rd trimester [metric: 0.28 kg/week 
+	(0.23 &ndash; 0.33 kg/wk).</p>
+		<h2 class='subheading'>Challenges to Consider</h2><p>Your challenge is to avoid gaining too much weight and to eat a healthy diet throughout pregnancy. Avoid alcohol, drugs and tobacco smoke (including second hand smoke) all of which can harm your baby. Although you may want to rest a bit more than usual as you get closer to delivering your baby, staying active and fit throughout your pregnancy will help you be more comfortable. It will also help your delivery go more smoothly. Don't forget to take your prenatal vitamins.</p>";
+
+}
+
+if ($bmi >= 30.0) {
+
+	echo "<h2 class='subheading'>Recommended Weight Gain</h2><p>Ideally, your total weight gain during pregnancy should 
+	be anywhere from 11 &ndash; 20 pounds (metric: 5.0 &ndash; 9.0 kg). Please see a health care professional as soon as you learn you 
+	are pregnant and throughout your pregnancy. Regular monitoring of your baby’s growth and development throughout pregnancy is very
+	important.</p>
+		<h2 class='subheading'>Recommended Pattern of Weight Gain</h2><p>Weight gain during the first trimester is usually negligible 
+	&mdash; not more than 4 pounds. After that, weight gain should be approximately 0.5 pound (0.4 &ndash; 0.6 pounds) per week during the 2nd and 3rd trimester [metric: 0.22 kg/week 
+	(0.17 &ndash; 0.27 kg/wk).</p>
+		<h2 class='subheading'>Challenges to Consider</h2><p>Your challenge is to avoid gaining too much weight and to eat a healthy diet throughout your pregnancy. Avoid alcohol, drugs and tobacco smoke (including second hand smoke) all of which can harm your baby. Although you may want to rest a bit more than usual as you get closer to delivering your baby, staying active and fit throughout your pregnancy will help you be more comfortable. It will also help your delivery go more smoothly. Don't forget to take your prenatal vitamins.</p>";
+
+}
+
+?>
+
+
+<p class="source">Source: Institute of Medicine (IOM) 2009 Gestational Weight Gain Guidelines</p>
+
+
+<p>More information about BMI:</p>
+
+
+<p>
+Use the BMI charts for adults to assess your general health risk:
+</p>
+<p class="hilite2"><a href="bmi/bmi6.pdf">BMI Chart for Adults</a> (up to 250 lbs.)</p>
+<p class="hilite2"><a href="bmi/bmi6a.pdf">BMI Chart for Adults</a> (above 250 lbs.)</p>
+
+<p>
+On the charts, color is used to indicate risk. The green zone indicates the lowest risk associated with BMI. The yellow zone indicates increased risk and the red zone indicates the highest risk associated with BMI.
+</p>
+
+<p>
+Please note: the accuracy of BMI assessment depends on accurate measurements of both height and weight.  Protocols for measurement of <a href="bmi/wtprot.php">weight</a> and <a href="bmi/htprot.php">standing height</a> are provided.
+</p>
+
+
+
+</div>
+<!-- end page content -->
+
+<?php
+
+do_pagebottom();
+do_footer();
+
+?>

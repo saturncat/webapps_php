@@ -1,0 +1,158 @@
+<?php
+/* This is part of the physical activity calculator from the improvement section of the fitness center. This code is performing some validation checks and then grabbing the data from an XML file, then calculating the output. */ 
+
+/*** Initial stuff ************************************/
+
+session_start();
+require_once("../../com/template_level_fitness.php");
+require_once("calc_fc.php");
+do_header("Physical Activity Selector");
+
+$xml = simplexml_load_file("mets1.xml");
+
+
+/*** Error checks ************************************/
+
+if (!preg_match('/^[0-9]+$/', $_POST['age'])) {
+   $error_input .= "<span class=\"alert_red_std\">ERROR: please enter your age correctly.</span><br />";
+}
+
+if (!preg_match('/^[0-9]+$/', $_POST['weight'])) {
+   $error_input .= "<span class=\"alert_red_std\">ERROR: please enter your weight correctly.</span><br />";
+} 
+if (!preg_match('/^[0-9]+$/', $_POST['time'])) {
+   $error_input .= "<span class=\"alert_red_std\">ERROR: please enter your time correctly.</span><br />";
+} 
+
+
+if (isset($_POST['weight'])){
+    $wt = metric_weight((int)$_POST['weight']);  
+}else{
+    $wt = "";
+}
+
+if (isset($_POST['activity'])){
+    $optioncode = $_POST['activity'];  
+}else{
+    $optioncode = "";
+}
+
+if (isset($_POST['age'])){
+    $age = (int)$_POST['age'];  
+}else{
+    $age = "";
+}
+
+if (isset($_POST['time'])){
+    $time = (int)$_POST['time'];  
+}else{
+    $time = "";
+}
+
+
+/*** XML access ************************************/
+
+
+
+
+if ($age <= 18) {
+	$metnum = $xml->xpath("//youthmets");
+}else{
+	$metnum = $xml->xpath("//mets");
+}
+
+$optioncode -= 1;
+//$metnum = $xml->xpath("//mets");
+$mets = (float)$metnum[$optioncode];
+
+
+$actname = $xml->xpath("//name");
+$activity = $actname[$optioncode];
+
+
+/*** Calculations ************************************/
+
+
+$calories = (int)compute_calories($mets,$wt);
+$totalburn = (int)$calories*$time;
+$calcstring =  "<p>You chose: " . $activity . "</p>
+	        <p>This activity burns " . $calories . " calories per minute.</p>
+		<p>If you perform this activity for " . $time . " minutes, you will burn approximately " . $totalburn . " calories.</p>";
+	
+
+	
+
+?>
+
+
+
+<!-- begin page content -->
+<div class="kitchen_std"> <!-- <div id="content"> -->
+
+<h1 class="heading">Physical Activity Selector</h1>
+<br />
+
+
+<p>  
+
+<?php if ($error_input) { 
+	echo $error_input; 
+} else {
+ echo $calcstring;
+}
+?>
+
+</p>
+<p>           
+<a href="fitness/improve/phys1.html">Try a different activity</a>
+</p>
+<?php
+if (isset($_SESSION['focus3'])) {
+?>
+<p>
+<a href="fitness/improve/cooldown.html">Continue</a><br />
+</p>
+<?php
+
+}
+//echo "focus3=".$_SESSION['focus3'];
+?>
+<p>           
+<a href="fitness/improve/index_imp.html">Return to the Improvement menu</a>
+</p>
+
+
+<p class="source">
+
+Source for Adults:<br />  
+Ainsworth BE, Haskell WL, Herrmann SD, Meckes N, Bassett Jr DR, Tudor-Locke C, Greer JL, Vezina J, Whitt-Glover MC, Leon AS. 
+The Compendium of Physical Activities Tracking Guide. Healthy Lifestyles Research Center, College of Nursing & Health 
+Innovation, Arizona State University. Retrieved 04-25-11 from the World Wide Web.
+<br />
+<a href="http://sites.google.com/site/compendiumofphysicalactivities/">
+http://sites.google.com/site/compendiumofphysicalactivities/
+</a>
+<br />
+Source for Youth:<br />
+Ridley K, Ainsworth BE, Olds TE. Development of a Compendium of Energy Expenditures for Youth. Int J Behav Nutr Phys Act. 2008; 5:45. 
+Retrieved 04-25-11 from the World Wide Web.
+<br />
+<a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2564974/">
+http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2564974/
+</a>
+
+
+</p>
+
+
+</div>
+
+
+<!-- end page content -->
+
+<?php
+
+//do_pagebottom();
+do_footer();
+
+?>
